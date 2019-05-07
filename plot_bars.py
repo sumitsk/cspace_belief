@@ -1,5 +1,5 @@
 import os
-import numpy
+import numpy as np
 from ss_plotting.make_plots import plot_bar_graph
 
 
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     
     for l in names:
         fn = 'avg_NN' + l
-        n = numpy.load(os.path.join(path,fn))
+        n = np.load(os.path.join(path,fn))
         acc.append(n['accnn'][2][2])
         err.append(n['errnn'][2][2])
     
@@ -48,14 +48,17 @@ if __name__ == '__main__':
         
     categories = ['e', 'm', ' we', 'wm']
     series = [acc, err]
-    plot_bar_graph(series, series_colors,
-    series_labels=series_labels,
-    category_labels=categories,
-    barwidth=0.25,
-    plot_ylabel=ylbl, 
-    plot_title=title,
-    legend_fontsize=fontsize/2,
-    fontsize=fontsize,
-    savefile='DT.jpg',
-    savefile_size=picsize)
+    plot_bar_graph(
+        series, 
+        series_colors,
+        series_labels=series_labels,
+        category_labels=categories,
+        barwidth=0.25,
+        plot_ylabel=ylbl, 
+        plot_title=title,
+        legend_fontsize=fontsize/2,
+        fontsize=fontsize,
+        savefile='DT.jpg',
+        savefile_size=picsize
+    )
 

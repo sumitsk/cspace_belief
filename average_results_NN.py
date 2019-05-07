@@ -1,7 +1,7 @@
 #!/usr/bin/env python -W ignore::DeprecationWarning
 
 import os
-import numpy
+import numpy as np
 
 
 if __name__ == '__main__':
@@ -24,21 +24,21 @@ if __name__ == '__main__':
     r_values = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
     N_values = [1000, 5000, 10000, 15000, 20000]
 
-    avg_accnn = numpy.zeros((len(N_values), len(k_values)))  
-    avg_errnn = numpy.zeros((len(N_values), len(k_values))) 
-    avg_accann = numpy.zeros((len(N_values), len(k_values))) 
-    avg_errann = numpy.zeros((len(N_values), len(k_values)))
+    avg_accnn = np.zeros((len(N_values), len(k_values)))  
+    avg_errnn = np.zeros((len(N_values), len(k_values))) 
+    avg_accann = np.zeros((len(N_values), len(k_values))) 
+    avg_errann = np.zeros((len(N_values), len(k_values)))
     '''
-    avg_accm = numpy.zeros(  len(N_values) )
-    avg_errm = numpy.zeros(  len(N_values) )
-    avg_accmw = numpy.zeros(  len(N_values) )
-    avg_errmw = numpy.zeros(  len(N_values) )
+    avg_accm = np.zeros(  len(N_values) )
+    avg_errm = np.zeros(  len(N_values) )
+    avg_accmw = np.zeros(  len(N_values) )
+    avg_errmw = np.zeros(  len(N_values) )
     '''
     for i in range(len(files)):
         # print('------------------', files[i], '------------------'
      
         fn = files[i] + "_NN_w.npz"
-        n = numpy.load(os.path.join(results_path, fn))
+        n = np.load(os.path.join(results_path, fn))
         accann = n['accann']
         accnn = n['accnn']
         errann = n['errann']
@@ -70,7 +70,8 @@ if __name__ == '__main__':
     avg_errm = avg_errm / len(files)
     avg_errmw = avg_errmw / len(files)
     '''
-    #numpy.savez( os.path.join(results_path, 'avg_NN_m_w'), accnn = avg_accnn, accann = avg_accann, errnn = avg_errnn, errann = avg_errann )
+    # np.savez(os.path.join(results_path, 'avg_NN_m_w'), accnn = avg_accnn, accann = avg_accann, 
+    #          errnn = avg_errnn, errann = avg_errann )
     
     print(avg_accnn)
     print(avg_accann)

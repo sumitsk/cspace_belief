@@ -1,7 +1,7 @@
 #!/usr/bin/env python -W ignore::DeprecationWarning
 
 import os
-import numpy
+import numpy as np
 
 from ss_plotting.make_plots import plot
 
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     N_values = [1000,5000,10000,15000,20000]
     r_values = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
     
-    n = numpy.load(os.path.join(results_path, 'avg_krnl.npz'))
+    n = np.load(os.path.join(results_path, 'avg_krnl.npz'))
     accnn = n['accg']
     accann = n['accep']
     errnn = n['errg']
@@ -47,7 +47,9 @@ if __name__ == '__main__':
     err = errann[:,1]
     series_line = [(xval, acc), (xval, err)]
     
-    plot(series_line, series_colors=series_colors, 
+    plot(
+        series_line, 
+        series_colors=series_colors, 
         series_labels=series_labels, 
         plot_xlabel=xlbl,
         plot_ylabel=ylbl, 
@@ -60,5 +62,6 @@ if __name__ == '__main__':
         plot_xlim=xlim,
         # show_plot = True,
         savefile='EP_r=15' + '.jpg',
-        savefile_size=picsize)
+        savefile_size=picsize
+    )
 

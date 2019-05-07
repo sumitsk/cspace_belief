@@ -1,7 +1,7 @@
 #!/usr/bin/env python -W ignore::DeprecationWarning
 
 import os
-import numpy
+import numpy as np
 
 from ss_plotting.make_plots import plot
 
@@ -15,17 +15,17 @@ if __name__ == '__main__':
     N_values = [1000,5000,10000,15000,20000]
     # r_values = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
     
-    n = numpy.load(os.path.join(results_path, 'avg_NN.npz'))
+    n = np.load(os.path.join(results_path, 'avg_NN.npz'))
     accnn = n['accnn']
     accann = n['accann']
     errnn = n['errnn']
     errann = n['errann']    
     
-    nd = numpy.load(os.path.join(results_path, 'avg_DT.npz'))
+    nd = np.load(os.path.join(results_path, 'avg_DT.npz'))
     accdt = nd['acc']
     errdt = nd['err']
         
-    nd = numpy.load(os.path.join(results_path, 'avg_DT.npz'))
+    nd = np.load(os.path.join(results_path, 'avg_DT.npz'))
     accdt = nd['acc']
     accdtw = nd['accw']
     accdtm = nd['accm']
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     errdtm = nd['errm']
     errdtmw = nd['errmw']
     
-    nk = numpy.load(os.path.join(results_path, 'avg_krnl.npz'))
+    nk = np.load(os.path.join(results_path, 'avg_krnl.npz'))
     accg = nk['accg']
     accep = nk['accep']
     errg = nk['errg']
@@ -76,19 +76,22 @@ if __name__ == '__main__':
     series_line = [(xval, accdt), (xval, accdtw), (xval, accdtm), (xval, accdtmw),
                    (xval, errdt), (xval, errdtw), (xval, errdtm), (xval, errdtmw)]   
     
-    plot(series_line, series_colors=series_colors, 
-    series_labels=series_labels, 
-    plot_xlabel=xlbl,
-    plot_ylabel=ylbl, 
-    plot_title=title, 
-    linewidth=linewidth, 
-    fontsize=fontsize, 
-    legend_fontsize=fontsize,
-    line_styles=line_styles, 
-    # legend_location=legend_loc, 
-    plot_ylim=ylim, 
-    plot_xlim=xlim,
-    show_plot=True,
-    savefile='DT_all' + '.jpg',
-    savefile_size=picsize)
+    plot(
+        series_line, 
+        series_colors=series_colors, 
+        series_labels=series_labels, 
+        plot_xlabel=xlbl,
+        plot_ylabel=ylbl, 
+        plot_title=title, 
+        linewidth=linewidth, 
+        fontsize=fontsize, 
+        legend_fontsize=fontsize,
+        line_styles=line_styles, 
+        # legend_location=legend_loc, 
+        plot_ylim=ylim, 
+        plot_xlim=xlim,
+        show_plot=True,
+        savefile='DT_all' + '.jpg',
+        savefile_size=picsize
+    )
     

@@ -1,6 +1,6 @@
 #!/usr/bin/env python -W ignore::DeprecationWarning
 
-import numpy
+import numpy as np
 import os
 import knn
 
@@ -29,21 +29,21 @@ if __name__ == '__main__':
     k_values = [1, 5, 10, 15, 20]
     N_values = [1000, 5000, 10000, 15000, 20000]
 
-    avg_accnn = numpy.zeros((len(N_values), len(k_values))) 
-    avg_errnn = numpy.zeros((len(N_values), len(k_values))) 
-    avg_accann = numpy.zeros((len(N_values), len(k_values))) 
-    avg_errann = numpy.zeros((len(N_values), len(k_values))) 
+    avg_accnn = np.zeros((len(N_values), len(k_values))) 
+    avg_errnn = np.zeros((len(N_values), len(k_values))) 
+    avg_accann = np.zeros((len(N_values), len(k_values))) 
+    avg_errann = np.zeros((len(N_values), len(k_values))) 
 
     for i in range(len(files)):
         print('------------------', files[i], '------------------')
-        accnn = numpy.zeros((len(N_values), len(k_values))) 
-        errnn = numpy.zeros((len(N_values), len(k_values))) 
-        accann = numpy.zeros((len(N_values), len(k_values))) 
-        errann = numpy.zeros((len(N_values), len(k_values))) 
-        accmnn = numpy.zeros((len(N_values), len(k_values))) 
-        errmnn = numpy.zeros((len(N_values), len(k_values))) 
-        accmann = numpy.zeros((len(N_values), len(k_values))) 
-        errmann = numpy.zeros((len(N_values), len(k_values))) 
+        accnn = np.zeros((len(N_values), len(k_values))) 
+        errnn = np.zeros((len(N_values), len(k_values))) 
+        accann = np.zeros((len(N_values), len(k_values))) 
+        errann = np.zeros((len(N_values), len(k_values))) 
+        accmnn = np.zeros((len(N_values), len(k_values))) 
+        errmnn = np.zeros((len(N_values), len(k_values))) 
+        accmann = np.zeros((len(N_values), len(k_values))) 
+        errmann = np.zeros((len(N_values), len(k_values))) 
         
         for j in range(len(N_values)):
             training_set_size = N_values[j]
@@ -51,15 +51,15 @@ if __name__ == '__main__':
             
             print("training_set_size:", training_set_size)
             fn = 'sobol_' + files[i] + '_' + str(training_set_size) + '.npz'
-            n = numpy.load(os.path.join(training_set_path,fn))
+            n = np.load(os.path.join(training_set_path,fn))
             training_set = n['samples']
             training_set_ccr = n['ccr']
             sjw = n['sjw']
-            S = numpy.cov(training_set.transpose())
-            inv_cov = numpy.linalg.inv(S)
+            S = np.cov(training_set.transpose())
+            inv_cov = np.linalg.inv(S)
             
             fn1 = files[i] + '_' + str(N_values[j]) + '.npz'
-            n1 = numpy.load(os.path.join(test_set_path, fn1))
+            n1 = np.load(os.path.join(test_set_path, fn1))
             test_set = n1['test_set']
             ccr = n1['ccr']
 
@@ -69,10 +69,10 @@ if __name__ == '__main__':
             nbrs = NearestNeighbors()
             nbrs.fit(training_set)
             
-            cprnn = numpy.ones((test_set_size, len(k_values)))
-            cprann = numpy.ones((test_set_size, len(k_values)))
-            cprmnn = numpy.ones((test_set_size, len(k_values)))
-            cprmann = numpy.ones((test_set_size, len(k_values)))
+            cprnn = np.ones((test_set_size, len(k_values)))
+            cprann = np.ones((test_set_size, len(k_values)))
+            cprmnn = np.ones((test_set_size, len(k_values)))
+            cprmann = np.ones((test_set_size, len(k_values)))
 
             idx = 0
             while idx < test_set_size:
@@ -94,17 +94,17 @@ if __name__ == '__main__':
                 idx = idx + 1
         
             for t in range(len(k_values)):  
-                accnn[j,t] = 1.0*numpy.sum((cprnn[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
-                accann[j,t] = 1.0*numpy.sum((cprann[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
+                accnn[j,t] = 1.0*np.sum((cprnn[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
+                accann[j,t] = 1.0*np.sum((cprann[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
 
-                errnn[j,t] = numpy.sum(numpy.absolute(cprnn[:,t] - ccr)) / d / test_set_size
-                errann[j,t] = numpy.sum(numpy.absolute(cprann[:,t] - ccr)) / d / test_set_size
+                errnn[j,t] = np.sum(np.absolute(cprnn[:,t] - ccr)) / d / test_set_size
+                errann[j,t] = np.sum(np.absolute(cprann[:,t] - ccr)) / d / test_set_size
 
-                accmnn[j,t] = 1.0*numpy.sum((cprmnn[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
-                accmann[j,t] = 1.0*numpy.sum((cprmann[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
+                accmnn[j,t] = 1.0*np.sum((cprmnn[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
+                accmann[j,t] = 1.0*np.sum((cprmann[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
 
-                errmnn[j,t] = numpy.sum(numpy.absolute(cprmnn[:,t] - ccr)) / d / test_set_size
-                errmann[j,t] = numpy.sum(numpy.absolute(cprmann[:,t] - ccr)) / d / test_set_size
+                errmnn[j,t] = np.sum(np.absolute(cprmnn[:,t] - ccr)) / d / test_set_size
+                errmann[j,t] = np.sum(np.absolute(cprmann[:,t] - ccr)) / d / test_set_size
 
                 # print(accnn[j,t] , errnn[j,t], accann[j,t] , errann[j,t]
                 # print(accmnn[j,t] , errmnn[j,t], accmann[j,t] , errmann[j,t]    
@@ -114,9 +114,9 @@ if __name__ == '__main__':
         avg_accann = avg_accann + accann
         avg_errann = avg_errann + errann
 
-        numpy.savez(os.path.join(results_path, files[i]+'_NN_w'),
+        np.savez(os.path.join(results_path, files[i]+'_NN_w'),
                     accnn=accnn, accann=accann, errnn=errnn, errann=errann) 
-        numpy.savez(os.path.join(results_path, files[i]+'_NN_m_w'),
+        np.savez(os.path.join(results_path, files[i]+'_NN_m_w'),
                     accnn=accmnn, accann=accmann, errnn=errmnn, errann=errmann)
         print(accnn, accmnn)
         

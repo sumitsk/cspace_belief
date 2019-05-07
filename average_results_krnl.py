@@ -1,7 +1,7 @@
 #!/usr/bin/env python -W ignore::DeprecationWarning
 
 import os
-import numpy
+import numpy as np
 
 if __name__ == '__main__':
     files = (['env_shelf01', 'env_table1', 'env_table3',
@@ -22,21 +22,21 @@ if __name__ == '__main__':
     r_values = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
     N_values = [1000, 5000, 10000, 15000, 20000]
 
-    avg_accg = numpy.zeros((len(N_values), len(r_values)))  
-    avg_errg = numpy.zeros((len(N_values), len(r_values))) 
-    avg_accep = numpy.zeros((len(N_values), len(r_values))) 
-    avg_errep = numpy.zeros((len(N_values), len(r_values)))
+    avg_accg = np.zeros((len(N_values), len(r_values)))  
+    avg_errg = np.zeros((len(N_values), len(r_values))) 
+    avg_accep = np.zeros((len(N_values), len(r_values))) 
+    avg_errep = np.zeros((len(N_values), len(r_values)))
     '''
-    avg_accm = numpy.zeros(  len(N_values) )
-    avg_errm = numpy.zeros(  len(N_values) )
-    avg_accmw = numpy.zeros(  len(N_values) )
-    avg_errmw = numpy.zeros(  len(N_values) )
+    avg_accm = np.zeros(  len(N_values) )
+    avg_errm = np.zeros(  len(N_values) )
+    avg_accmw = np.zeros(  len(N_values) )
+    avg_errmw = np.zeros(  len(N_values) )
     '''
     for i in range(len(files)):
         # print('------------------', files[i], '------------------'
      
         fn = files[i] + "_krnl_m.npz"
-        n = numpy.load(os.path.join(results_path, fn))
+        n = np.load(os.path.join(results_path, fn))
         accep = n['accep']
         accg = n['accg']
         errep = n['errep']
@@ -68,11 +68,11 @@ if __name__ == '__main__':
     avg_errm = avg_errm / len(files)
     avg_errmw = avg_errmw / len(files)
     '''
-    numpy.savez(os.path.join(results_path, 'avg_krnl_m'),
-                accg=avg_accg,
-                accep=avg_accep,
-                errg=avg_errg,
-                errep=avg_errep)
+    np.savez(os.path.join(results_path, 'avg_krnl_m'),
+             accg=avg_accg,
+             accep=avg_accep,
+             errg=avg_errg,
+             errep=avg_errep)
     
     print(avg_accg)
     print(avg_accep)

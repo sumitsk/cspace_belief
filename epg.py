@@ -1,6 +1,6 @@
 #!/usr/bin/env python -W ignore::DeprecationWarning
 
-import numpy
+import numpy as np
 import os
 import knn
 
@@ -29,17 +29,17 @@ if __name__ == '__main__':
     r_values = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
     N_values = [1000, 5000, 10000, 15000, 20000]
 
-    avg_accg = numpy.zeros((len(N_values), len(r_values)))
-    avg_errg = numpy.zeros((len(N_values), len(r_values)))
-    avg_accep = numpy.zeros((len(N_values), len(r_values)))
-    avg_errep = numpy.zeros((len(N_values), len(r_values)))
+    avg_accg = np.zeros((len(N_values), len(r_values)))
+    avg_errg = np.zeros((len(N_values), len(r_values)))
+    avg_accep = np.zeros((len(N_values), len(r_values)))
+    avg_errep = np.zeros((len(N_values), len(r_values)))
 
     for i in range(len(files)):
         print('------------------', files[i], '----------------')
-        accg = numpy.ones((len(N_values), len(r_values)))
-        errg = numpy.ones((len(N_values), len(r_values)))
-        accep = numpy.ones((len(N_values), len(r_values)))
-        errep = numpy.ones((len(N_values), len(r_values)))
+        accg = np.ones((len(N_values), len(r_values)))
+        errg = np.ones((len(N_values), len(r_values)))
+        accep = np.ones((len(N_values), len(r_values)))
+        errep = np.ones((len(N_values), len(r_values)))
         
         for j in range(len(N_values)):
             training_set_size = N_values[j]
@@ -47,23 +47,23 @@ if __name__ == '__main__':
             
             print("training_set_size:", training_set_size)
             fn = 'sobol_' + files[i] + '_' + str(training_set_size) +'.npz'
-            n = numpy.load(os.path.join(training_set_path,fn))
+            n = np.load(os.path.join(training_set_path,fn))
             training_set = n['samples']
             training_set_ccr = n['ccr']
             sjw = n['sjw']
-            S = numpy.cov(training_set.transpose())
-            inv_cov = numpy.linalg.inv(S)
+            S = np.cov(training_set.transpose())
+            inv_cov = np.linalg.inv(S)
             
             fn1 = files[i] + '_' + str(training_set_size) +'.npz'
-            n1 = numpy.load(os.path.join(test_set_path,fn1))
+            n1 = np.load(os.path.join(test_set_path,fn1))
             test_set = n1['test_set']
             ccr = n1['ccr']
                       
             nbrs = NearestNeighbors()
             nbrs.fit(training_set)
             
-            cprg = numpy.ones((test_set_size, len(r_values)))
-            cprep = numpy.ones((test_set_size, len(r_values)))
+            cprg = np.ones((test_set_size, len(r_values)))
+            cprep = np.ones((test_set_size, len(r_values)))
 
             idx = 0
             while idx < test_set_size:
@@ -79,11 +79,11 @@ if __name__ == '__main__':
                 idx = idx + 1
                 
             for t in range(len(r_values)):  
-                accg[j,t] = 1.0 * numpy.sum((cprg[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
-                accep[j,t] = 1.0 * numpy.sum((cprep[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
+                accg[j,t] = 1.0 * np.sum((cprg[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
+                accep[j,t] = 1.0 * np.sum((cprep[:,t] > threshold) == (ccr == cobs_val)) / test_set_size
 
-                errg[j,t] = numpy.sum(numpy.absolute(cprg[:,t] - ccr)) / d / test_set_size
-                errep[j,t] = numpy.sum(numpy.absolute(cprep[:,t] - ccr)) / d / test_set_size
+                errg[j,t] = np.sum(np.absolute(cprg[:,t] - ccr)) / d / test_set_size
+                errep[j,t] = np.sum(np.absolute(cprep[:,t] - ccr)) / d / test_set_size
 
                 print(accg[j,t], errg[j,t], accep[j,t], errep[j,t])    
 
@@ -92,7 +92,7 @@ if __name__ == '__main__':
         avg_accep = avg_accep + accep
         avg_errep = avg_errep + errep
 
-        # numpy.savez(os.path.join(results_path, files[i]+'_krnl_m_w'),
+        # np.savez(os.path.join(results_path, files[i]+'_krnl_m_w'),
         #             accg=accg, accep=accep, errg=errg, errep=errep)
 
     avg_accg = avg_accg / len(files)

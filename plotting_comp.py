@@ -1,7 +1,7 @@
 #!/usr/bin/env python -W ignore::DeprecationWarning
 
 import os
-import numpy
+import numpy as np
 
 from ss_plotting.make_plots import plot
 
@@ -15,13 +15,13 @@ if __name__ == '__main__':
     N_values = [1000,5000,10000,15000,20000]
     # r_values = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
     
-    n = numpy.load(os.path.join(results_path, 'avg_NN.npz'))
+    n = np.load(os.path.join(results_path, 'avg_NN.npz'))
     accnn = n['accnn']
     accann = n['accann']
     errnn = n['errnn']
     errann = n['errann']    
         
-    nw = numpy.load(os.path.join(results_path, 'avg_NN_w.npz'))
+    nw = np.load(os.path.join(results_path, 'avg_NN_w.npz'))
     accnnw = nw['accnn']
     accannw = nw['accann']
     errnnw = nw['errnn']
@@ -52,18 +52,21 @@ if __name__ == '__main__':
     errw = errannw[:,2]
     
     series_line=[(xval, acc), (xval, accw), (xval, err), (xval, errw) ]   
-    plot(series_line, series_colors=series_colors, 
-    series_labels=series_labels, 
-    plot_xlabel=xlbl,
-    plot_ylabel=ylbl, 
-    plot_title=title, 
-    linewidth=linewidth,  
-    fontsize=fontsize, 
-    legend_fontsize=fontsize, 
-    # legend_location=legend_loc, 
-    plot_ylim=ylim, 
-    plot_xlim=xlim,
-    show_plot=True,
-    savefile='ANN_weights_comp_k=10' + '.jpg',
-    savefile_size=picsize)
+    plot(
+        series_line, 
+        series_colors=series_colors, 
+        series_labels=series_labels, 
+        plot_xlabel=xlbl,
+        plot_ylabel=ylbl, 
+        plot_title=title, 
+        linewidth=linewidth,  
+        fontsize=fontsize, 
+        legend_fontsize=fontsize, 
+        # legend_location=legend_loc, 
+        plot_ylim=ylim, 
+        plot_xlim=xlim,
+        show_plot=True,
+        savefile='ANN_weights_comp_k=10' + '.jpg',
+        savefile_size=picsize
+    )
     

@@ -1,6 +1,6 @@
 #!/usr/bin/env python -W ignore::DeprecationWarning
 
-import numpy
+import numpy as np
 import os
 import knn
 import time
@@ -38,22 +38,22 @@ if __name__ == '__main__':
     tann = 0
     for i in range(len(files)):
         print('------------------', files[i], '------------------')
-        accnn = numpy.zeros((len(N_values), 1)) 
-        errnn = numpy.zeros((len(N_values), 1)) 
-        accann = numpy.zeros((len(N_values), 1)) 
-        errann = numpy.zeros((len(N_values), 1)) 
+        accnn = np.zeros((len(N_values), 1)) 
+        errnn = np.zeros((len(N_values), 1)) 
+        accann = np.zeros((len(N_values), 1)) 
+        errann = np.zeros((len(N_values), 1)) 
                 
         N_value = 20000
         training_set_size = N_value
         test_set_size = training_set_size / 10
         
         fn = 'sobol_' + files[i] + '_' + str(training_set_size) + '.npz'
-        n = numpy.load(os.path.join(training_set_path,fn))
+        n = np.load(os.path.join(training_set_path,fn))
         training_set = n['samples']
         training_set_ccr = n['ccr']
         
         fn1 = files[i] + '_' + str(N_value) + '.npz'
-        n1 = numpy.load(os.path.join(test_set_path, fn1))
+        n1 = np.load(os.path.join(test_set_path, fn1))
         test_set = n1['test_set']
         ccr = n1['ccr']
 
@@ -67,8 +67,8 @@ if __name__ == '__main__':
         nbrs.fit(training_set)
         tnn = tnn + time.clock() - t0
         
-        cprnn = numpy.ones((test_set_size, 1))
-        cprann = numpy.ones((test_set_size, 1))
+        cprnn = np.ones((test_set_size, 1))
+        cprann = np.ones((test_set_size, 1))
 
         idx = 0
         while idx < test_set_size:
@@ -89,13 +89,13 @@ if __name__ == '__main__':
             idx = idx + 1
     
         t0 = time.clock()
-        accnn = 1.0*numpy.sum((cprnn[:,0] > threshold) == (ccr == cobs_val)) / test_set_size
-        errnn = numpy.sum(numpy.absolute(cprnn[:,0] - ccr)) / d / test_set_size
+        accnn = 1.0*np.sum((cprnn[:,0] > threshold) == (ccr == cobs_val)) / test_set_size
+        errnn = np.sum(np.absolute(cprnn[:,0] - ccr)) / d / test_set_size
         tnn = tnn + time.clock() - t0
         
         t0 = time.clock()
-        accann = 1.0*numpy.sum((cprann[:,0] > threshold) == (ccr == cobs_val)) / test_set_size
-        errann = numpy.sum(numpy.absolute(cprann[:,0] - ccr)) / d / test_set_size
+        accann = 1.0*np.sum((cprann[:,0] > threshold) == (ccr == cobs_val)) / test_set_size
+        errann = np.sum(np.absolute(cprann[:,0] - ccr)) / d / test_set_size
         tann = tann + time.clock() - t0
         
         t0 = time.clock()

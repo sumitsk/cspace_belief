@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import os
 import random
 from scipy.spatial import Delaunay
@@ -22,8 +22,8 @@ def find_cprs(query, tri, ts1, ts2, training_set_ccr, inv_cov1=None, inv_cov2=No
     neighbors2 = ts2[neighbors_idx]
 
     if sjw is None:
-        neighbors_weight1 = numpy.ones((len(neighbors1), len(neighbors1[0])))
-        neighbors_weight2 = numpy.ones((len(neighbors2), len(neighbors2[0])))
+        neighbors_weight1 = np.ones((len(neighbors1), len(neighbors1[0])))
+        neighbors_weight2 = np.ones((len(neighbors2), len(neighbors2[0])))
     else:
         neighbors_weight1 = sjw[neighbors_idx,:dim]
         neighbors_weight2 = sjw[neighbors_idx,dim:]
@@ -53,7 +53,7 @@ def find_best_alpha(training_set, sjw=None):
     trn_ccr = training_set_ccr[idxt]
 
     if sjw is None:
-        trn_jw = numpy.ones((len(trn_set), len(trn_set[0])))
+        trn_jw = np.ones((len(trn_set), len(trn_set[0])))
     else:
         trn_jw = sjw[idxt]
 
@@ -62,14 +62,14 @@ def find_best_alpha(training_set, sjw=None):
     tri = Delaunay(ts1)
 
     # s - covariance matrix
-    S1 = numpy.cov(ts1.transpose())
-    S2 = numpy.cov(ts2.transpose())
+    S1 = np.cov(ts1.transpose())
+    S2 = np.cov(ts2.transpose())
 
     threshold = 0.0
     max_acc = 0.0
     min_err = 1.0
 
-    cpr = numpy.ones(val_set_size)
+    cpr = np.ones(val_set_size)
     
     alpha = 0.01
     delta_alpha = 0.01
@@ -81,7 +81,7 @@ def find_best_alpha(training_set, sjw=None):
             si_idx = tri.find_simplex(val_set[i][:4])
             k = int(si_idx)
             if k == -1:
-                cpr[i] = numpy.uniform(-1,1)
+                cpr[i] = np.uniform(-1,1)
                 i = i + 1
                 continue      
 
@@ -90,8 +90,8 @@ def find_best_alpha(training_set, sjw=None):
             i = i + 1
 
         # print(cpr
-        # acc = 1.0 * numpy.sum((val_ccr == 1) == (cpr > threshold)) / val_set_size
-        err = numpy.sum(numpy.absolute(val_ccr-cpr)) / val_set_size / d
+        # acc = 1.0 * np.sum((val_ccr == 1) == (cpr > threshold)) / val_set_size
+        err = np.sum(np.absolute(val_ccr-cpr)) / val_set_size / d
         
         if err > min_err:
             min_err = err
@@ -123,14 +123,14 @@ if __name__ == '__main__':
     for i in range(len(files)):
         print('--------------------',files[i],'------------------')
         
-        acc = numpy.zeros(len(N_values))
-        accw = numpy.zeros(len(N_values))
-        accm = numpy.zeros(len(N_values))
-        accmw = numpy.zeros(len(N_values))
-        err = numpy.zeros(len(N_values))
-        errw = numpy.zeros(len(N_values))
-        errm = numpy.zeros(len(N_values))
-        errmw = numpy.zeros(len(N_values))
+        acc = np.zeros(len(N_values))
+        accw = np.zeros(len(N_values))
+        accm = np.zeros(len(N_values))
+        accmw = np.zeros(len(N_values))
+        err = np.zeros(len(N_values))
+        errw = np.zeros(len(N_values))
+        errm = np.zeros(len(N_values))
+        errmw = np.zeros(len(N_values))
         
         for j in range(len(N_values)):
             training_set_size = N_values[j]
@@ -138,13 +138,13 @@ if __name__ == '__main__':
 
             # print("training_set_size:", training_set_size
             fn = 'sobol_' + files[i] + '_' + str(training_set_size) + '.npz'
-            n = numpy.load(os.path.join(training_set_path,fn))
+            n = np.load(os.path.join(training_set_path,fn))
             training_set = n['samples']
             training_set_ccr = n['ccr']
             sjw = n['sjw']
             
             fn1 = files[i] + '_' + str(N_values[j]) + '.npz'
-            n1 = numpy.load(os.path.join(test_set_path, fn1))
+            n1 = np.load(os.path.join(test_set_path, fn1))
             test_set = n1['test_set']
             ccr = n1['ccr']
 
@@ -154,20 +154,20 @@ if __name__ == '__main__':
             tri = Delaunay(ts1)
 
             # s - covariance matrix
-            S1 = numpy.cov(ts1.transpose())
-            S2 = numpy.cov(ts2.transpose())
-            inv_cov1 = numpy.linalg.inv(S1)
-            inv_cov2 = numpy.linalg.inv(S2)
+            S1 = np.cov(ts1.transpose())
+            S2 = np.cov(ts2.transpose())
+            inv_cov1 = np.linalg.inv(S1)
+            inv_cov2 = np.linalg.inv(S2)
             
-            cpr = numpy.ones(test_set_size)
-            cprw = numpy.ones(test_set_size)
-            cprm = numpy.ones(test_set_size)
-            cprmw = numpy.ones(test_set_size)
+            cpr = np.ones(test_set_size)
+            cprw = np.ones(test_set_size)
+            cprm = np.ones(test_set_size)
+            cprmw = np.ones(test_set_size)
             '''
-            cpr1 = numpy.ones(test_set_size)
-            cpr2 = numpy.ones(test_set_size)
-            cprw1 = numpy.ones(test_set_size)
-            cprw2 = numpy.ones(test_set_size)
+            cpr1 = np.ones(test_set_size)
+            cpr2 = np.ones(test_set_size)
+            cprw1 = np.ones(test_set_size)
+            cprw2 = np.ones(test_set_size)
             '''
             
             # hard coded value            
@@ -191,19 +191,20 @@ if __name__ == '__main__':
                 # cprw1[idx], cprw2[idx] = find_cprs(query, tri, ts1, ts2, training_set_ccr, S1, S2)
                 idx = idx + 1
                 
-            acc[j] = 1.0 * numpy.sum((ccr == cobs_val) == (cpr > threshold)) / test_set_size
-            err[j] = numpy.sum(numpy.absolute(ccr-cpr)) / test_set_size / d
+            acc[j] = 1.0 * np.sum((ccr == cobs_val) == (cpr > threshold)) / test_set_size
+            err[j] = np.sum(np.absolute(ccr-cpr)) / test_set_size / d
             
-            accw[j] = 1.0 * numpy.sum((ccr == cobs_val) == (cprw > threshold)) / test_set_size
-            errw[j] = numpy.sum(numpy.absolute(ccr-cprw)) / test_set_size / d
+            accw[j] = 1.0 * np.sum((ccr == cobs_val) == (cprw > threshold)) / test_set_size
+            errw[j] = np.sum(np.absolute(ccr-cprw)) / test_set_size / d
             
-            accm[j] = 1.0 * numpy.sum((ccr == cobs_val) == (cprm > threshold)) / test_set_size
-            errm[j] = numpy.sum(numpy.absolute(ccr-cprm)) / test_set_size / d
+            accm[j] = 1.0 * np.sum((ccr == cobs_val) == (cprm > threshold)) / test_set_size
+            errm[j] = np.sum(np.absolute(ccr-cprm)) / test_set_size / d
             
-            accmw[j] = 1.0 * numpy.sum((ccr == cobs_val) == (cprmw > threshold)) / test_set_size
-            errmw[j] = numpy.sum(numpy.absolute(ccr-cprmw)) / test_set_size / d
+            accmw[j] = 1.0 * np.sum((ccr == cobs_val) == (cprmw > threshold)) / test_set_size
+            errmw[j] = np.sum(np.absolute(ccr-cprmw)) / test_set_size / d
                 
-        # numpy.savez( os.path.join(results_path, files[i]+'_DT') , acc = acc, accw = accw, accm = accm, accmw = accmw, err = err, errw = errw, errm = errm, errmw = errmw)
+        # np.savez(os.path.join(results_path, files[i]+'_DT') , acc = acc, accw = accw, 
+        #          accm = accm, accmw = accmw, err = err, errw = errw, errm = errm, errmw = errmw)
             
         print(acc,'\n', accw,'\n', accm,'\n', accmw)
         print(err,'\n', errw,'\n', errm,'\n', errmw)                
@@ -219,10 +220,10 @@ if __name__ == '__main__':
             cpr = (cpr1 + alpha * cpr2)/(1 + alpha)
             cprw = (cprw1 + alpha * cprw2)/(1 + alpha)
             
-            acc = 1.0 * numpy.sum((ccr == cobs_val) == (cpr > threshold)) / test_set_size
-            err = numpy.sum(numpy.absolute(ccr-cpr)) / test_set_size / d
-            accw = 1.0 * numpy.sum((ccr == cobs_val) == (cprw > threshold)) / test_set_size
-            errw = numpy.sum(numpy.absolute(ccr-cprw)) / test_set_size / d
+            acc = 1.0 * np.sum((ccr == cobs_val) == (cpr > threshold)) / test_set_size
+            err = np.sum(np.absolute(ccr-cpr)) / test_set_size / d
+            accw = 1.0 * np.sum((ccr == cobs_val) == (cprw > threshold)) / test_set_size
+            errw = np.sum(np.absolute(ccr-cprw)) / test_set_size / d
 
             accl.append(acc)
             accwl.append(accw)

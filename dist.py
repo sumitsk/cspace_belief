@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import math
 
 # method                - 'None' arguments
@@ -13,13 +13,13 @@ def weighted_L2(delta, inv_cov=None, weights=None):
     # weights - joint weights
     
     if weights is None:
-        weights = numpy.ones(len(delta))
-    delta = numpy.multiply(delta, weights**0.5)
+        weights = np.ones(len(delta))
+    delta = np.multiply(delta, weights**0.5)
         
     if inv_cov is None:
-        inv_cov = numpy.identity(len(delta))    
+        inv_cov = np.identity(len(delta))    
                 
-    return math.sqrt(numpy.dot(delta, numpy.dot(inv_cov, delta)))
+    return math.sqrt(np.dot(delta, np.dot(inv_cov, delta)))
 
 
 def reciprocal(delta, inv_cov=None, weights=None):

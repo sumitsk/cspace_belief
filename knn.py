@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import dist
 import random
 
@@ -6,7 +6,7 @@ import random
 # computes query's neighbors weight and returns cpr
 def predictor(query, neighbors, neighbors_ccr, neighbors_weight, method, param=None, inv_cov=None):
     delta = neighbors - query
-    w = numpy.ones(len(neighbors))
+    w = np.ones(len(neighbors))
 
     for i in range(len(neighbors)):
         if method == 'r':               # reciprocal (1/d) 
@@ -18,7 +18,7 @@ def predictor(query, neighbors, neighbors_ccr, neighbors_weight, method, param=N
         else:                           # 'ep' - epanechnikov ( 0.75 * (1-d**2/r**2) )
             w[i] = dist.epanechnikov(delta[i], param, inv_cov, neighbors_weight[i])
         
-        cpr = numpy.dot(w, neighbors_ccr) / numpy.sum(w)
+        cpr = np.dot(w, neighbors_ccr) / np.sum(w)
 
     # cpr  = bnb_predictor(query, neighbors, neighbors_ccr, w)    
     return cpr 
@@ -33,10 +33,10 @@ def nn_predictor(query, training_set, training_set_ccr, nbrs, n_neighbors, metho
     neighbors_ccr = training_set_ccr[indices]
 
     if inv_cov is None:
-        inv_cov = numpy.identity(len(query))
+        inv_cov = np.identity(len(query))
     
     if weights is None:
-        neighbors_weight = numpy.ones((len(neighbors), len(neighbors[0])))
+        neighbors_weight = np.ones((len(neighbors), len(neighbors[0])))
     else:
         neighbors_weight = weights[indices]
     
@@ -57,7 +57,7 @@ def gaussian_predictor(query, training_set, training_set_ccr, nbrs, radius, ks=N
     neighbors_ccr = training_set_ccr[indices]
 
     if weights is None:
-        neighbors_weight = numpy.ones((len(neighbors), len(neighbors[0])))
+        neighbors_weight = np.ones((len(neighbors), len(neighbors[0])))
     else:
         neighbors_weight = weights[indices]
         return predictor(query, neighbors, neighbors_ccr, neighbors_weight, 'g', param=ks, inv_cov=inv_cov)
@@ -72,7 +72,7 @@ def epanechnikov_predictor(query, training_set, training_set_ccr, nbrs, radius, 
     neighbors_ccr = training_set_ccr[indices]
 
     if weights is None:
-        neighbors_weight = numpy.ones((len(neighbors), len(neighbors[0])))
+        neighbors_weight = np.ones((len(neighbors), len(neighbors[0])))
     else:
         neighbors_weight = weights[indices]
 
@@ -95,19 +95,19 @@ def neighbors_indices(query, nbrs, nn_method, param=1):
 def bnb_predictor(query, neighbors, nccr, w):
     # x - query
     # y - ccr
-    mu_y = numpy.dot(nccr,w) / numpy.sum(w)
-    mu_x = numpy.dot(neighbors.transpose(),w) / numpy.sum(w)
+    mu_y = np.dot(nccr,w) / np.sum(w)
+    mu_x = np.dot(neighbors.transpose(),w) / np.sum(w)
     
     delta_y = nccr - mu_y
     delta_x = neighbors - mu_x
-    temp = numpy.sum(delta_x**2, axis=1)
-    var_x = numpy.dot(temp, w) / numpy.sum(w)
-    var_xy = numpy.dot(numpy.multiply(delta_y,w),delta_x) / numpy.sum(w)
+    temp = np.sum(delta_x**2, axis=1)
+    var_x = np.dot(temp, w) / np.sum(w)
+    var_xy = np.dot(np.multiply(delta_y,w),delta_x) / np.sum(w)
 
     if var_x == 0:
         return mu_y 
 
-    cpr = mu_y + numpy.dot(var_xy,query-mu_x) / var_x
+    cpr = mu_y + np.dot(var_xy,query-mu_x) / var_x
     return cpr
 
 # gaussian and epanechnikov predictors
@@ -117,12 +117,12 @@ def kernel_predictor(query, training_set, training_set_ccr, nbrs, indices, radiu
     neighbors_ccr = training_set_ccr[indices]
 
     if weights is None:
-        neighbors_weight = numpy.ones((len(neighbors), len(neighbors[0])))
+        neighbors_weight = np.ones((len(neighbors), len(neighbors[0])))
     else:
         neighbors_weight = weights[indices]
 
-    wg = numpy.ones(len(neighbors))
-    wep = numpy.ones(len(neighbors))
+    wg = np.ones(len(neighbors))
+    wep = np.ones(len(neighbors))
 
     delta = neighbors - query
     
@@ -132,10 +132,10 @@ def kernel_predictor(query, training_set, training_set_ccr, nbrs, indices, radiu
         wg[i] = dist.gaussian(delta[i], ks, inv_cov, neighbors_weight[i]) 
         wep[i] = dist.epanechnikov(delta[i], radius, inv_cov, neighbors_weight[i]) 
     
-    wg = wg / numpy.linalg.norm(wg)
-    wep = wep / numpy.linalg.norm(wep)
+    wg = wg / np.linalg.norm(wg)
+    wep = wep / np.linalg.norm(wep)
 
-    cprg = numpy.dot(wg, neighbors_ccr) / numpy.sum(wg)
-    cprep = numpy.dot(wep, neighbors_ccr) / numpy.sum(wep)
+    cprg = np.dot(wg, neighbors_ccr) / np.sum(wg)
+    cprep = np.dot(wep, neighbors_ccr) / np.sum(wep)
 
     return cprg, cprep
